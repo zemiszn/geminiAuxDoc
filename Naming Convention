@@ -1,0 +1,250 @@
+Naming Convention
+Salesforce API Naming Convention
+Recommended naming convention is to use the customer name in the prefix (WERFEN – WE) and include the project stream:
+
+Sales – SAL: WESAL_
+Service – SER: WESER_
+Field Service – FSE: WEFSE_
+Marketing Cloud – MKT: WEMKT_
+Revenue Cloud – REV: WEREV_
+If the functionality is cross‑module, the prefix must use the common value WERFEN_.
+
+Following the prefix, a distinction will be made based on the component type.
+
+Component
+Value
+Object
+obj
+Field
+fld
+Path
+pth
+Job Schedule
+job
+Approval steps
+apbs
+Apex Class
+cls
+Apex Dispatcher
+dsp
+Sharing Rules
+sh
+Page Layouts
+ply
+Record Pages
+rp
+VisualForce
+vf
+Global Picklist
+pl
+Custom Label
+lbl
+Custom Setting
+cs
+Remote Sites
+rm
+Single Sign On
+sso
+Custom Permissions
+cp
+Trigger
+trg
+Button
+bt
+Process Builder
+prcs
+Workflow rule
+wr
+Visual Workflow
+vw
+Validation Rule
+vr
+Application
+app
+Permission Set
+ps
+Tab
+tab
+Approval process
+apb
+Assignment Rule
+ar
+Certificate
+cert
+Static Resource
+sr
+Role
+rol
+Report
+rpt
+Dashboard
+dshb
+Custom Report Type
+crt
+Record Type
+rt
+Group
+grp
+Folder
+fldr
+Matching rules
+mr
+Duplicate rules
+dr
+Queue
+queue
+Quick Action
+qaction
+Email template
+eptl
+Email template folder
+eptlf
+Compact layout
+cly
+Workflow field update
+fu
+listView
+lstv
+Sales Processes
+salesPcr
+Lead Processes
+leadPcr
+Case Processes
+casePcr
+Named Credential
+nmc
+Visualforce Component
+vfc
+Custom Metadata Type
+cmt
+Auto response rule
+autorr
+Workflow email alert
+wea
+Entitlement process
+entPcr
+Sharing set
+sharingSet
+Entitlement template
+entplt
+Sharing reason
+shReason
+Field set
+fldSet
+Email Application panel
+mailRp
+Change set
+chs
+Account Team
+accTeam
+Case Team
+caseTeam
+Territory Model
+terriMod
+Territpry Type
+terriType
+Territory
+terri
+Account Team Role
+accTeamRol
+Notification Type
+nt
+Platform Event
+pev
+Dataflow
+dtf
+Dataset
+dts
+Lens
+lens
+Permission Set Group
+psg
+Audience
+aud
+Decision Table
+decTbl
+Message Channel (LWC)
+lwcChannel
+Workflow Action Task
+wtaska
+Big Object
+bigObj
+CSP Trusted Site
+cspTrust
+Einstein Bot
+bot
+Data Processing Engine
+dpe
+Conversation Message Definition
+cmd
+Live Message Setup
+lms
+Feed Filters
+ff
+Einstein Activity Capture
+eac
+Data Lake Object
+dlo
+Data Stream
+dstr
+Data Source Object
+dso
+Data Model Object
+dmo
+Calculated Insight
+cio
+Data Graph
+dg
+Data Space
+ds
+Semantic Model
+sm
+Data Share
+dshr
+Lastly, the component name will follow the camel case methodology: customFieldName.
+
+For example:
+
+·      Apex Class: WESAL_cls_apexName
+·      LWC: WESER_lwc_componentName
+·      RecordType: WERFEN_rt_recordTypeName
+
+Other Nomenclatures
+Labels
+All labels must begin with an uppercase letter and continue in lowercase. For example: Custom field
+
+List View
+These components must use the application prefix, for example: WESAL_nameOfTheListView
+
+Home Pages
+These components must use the application prefix, for example: WESAL_nameOfTheHomePage
+
+Documents
+These components must use the application prefix, for example: WESAL_nameOfDocument
+
+Letterhead
+These components must use the application prefix, for example: WESAL_nameOfLetterHead
+
+Apex Classes
+For the different Apex class types, we will also use a special naming convention by means of suffixes.
+
+For example, starting from a base Apex class: WESAL_cls_nameApexClass
+
+Test: WESAL_cls_nameApexClass_test
+Utils: WESAL_cls_nameApexClass_utils
+Batch: WESAL_cls_nameApexClass_batch
+Scheduled: WESAL_cls_nameApexClass_sch
+Queueable: WESAL_cls_nameApexClass_queue
+Apex Variables
+Use descriptive names for variables and avoid single‑letter names such as Integer a or String c, except when used as counters or control variables.
+
+Lists must begin with lst (e.g., lstCustomers).
+Maps must begin with map (e.g., mapDistributors).
+Sets must begin with set (e.g., setContacts).
+Apex Constants
+Constants must be written in uppercase letters using an underscore _ as a separator: For example: NAME_EXAMPLE
+
+Apex Triggers
+Triggers will be unique and centralized per object, invoking handler‑type classes to manage the required logic. This approach allows, for example, the use of custom settings to enable or disable different handlers within a trigger without affecting the behavior of the remaining logic.
+
+For example: WERFEN_trg_Account & WESAL_cls_handlerAccountCustomers
