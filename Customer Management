@@ -1,0 +1,345 @@
+Customer Master Model
+==image_0==.png
+
+Salesforce Customer Model
+==image_0==.png
+
+Account: Customer, Distributor and Prospect
+The customers maintained in SAP (which acts as the master system) will be synchronized with the Salesforce Account object, using a new Record Type named “Customer”. This integration will be performed through the Mulesoft system, which will operate as middleware between Salesforce and the rest of the systems:
+
+To visualize hierarchical relationships between different parent customers, the corresponding Account records will be linked using the ParentId field.
+
+Additionally, another Record Type, Distributors, will be available within the Account object to store distributor records. This information will also come from SAP through the same interface as customers, allowing distributors to be distinguished from customers via their different Record Types.
+
+We will also include an additional Record Type, Prospect, to allow opportunities to be associated with an unqualified lead in Salesforce (further details will be covered in the Leads section). To differentiate whether the prospect is a Customer or a Distributor, we will have these values reported in the Account Type field.
+
+Customer
+New custom fields needed for proper customer modeling:
+Sales Org - Global Picklist
+Sales Org Code - Formula: Sales Organization API VALUE
+Account Nickname - Text
+Blocked - Checkbox
+Blocked Reason - Text
+External ID - Text, External ID, Unique
+VIP - Checkbox
+Email - Email
+Email 2 - Email
+Phone 2 - Text
+Extension 1 - Text
+Extension 1 Description - Text
+Extension 2 - Text
+Extension 2 Description - Text
+Flag for open complaints - Checkbox
+Status - Picklist (Active, Block, Rejected) Once validated, Active. If it is blocked, Block, and if it is rejected, Rejected.
+Service Segmentation - Picklist (A, AA, AAA)
+Customer Type - Picklist (Direct, Indirect, Intercompany)
+Customer Type 2 - Picklist (Direct, Indirect, Intercompany)
+Public/Private - Picklist (Public, Private)
+GPO and/or IHN Affiliation - Text
+Diagram - URL
+12M Revenue - Double (16,2)
+12M Gross Profit - Double (16,2)
+Bedzise category: Picklist TBC
+Number of inpatients - Double (18,0)
+Number of outpatients - Double (18,0)
+Inactive Date - Date
+Inactive Reason - Text
+NIF/Fiscal ID - Text
+VAT special - Checkbox
+Payment Method - Picklist TBC
+Payment Terms - Picklist TBC
+DSO TBC
+Account Currency - Global Picklist
+Sold To - Checkbox - To indicate if the accounts are of the "Sold to" type. This comes from SAP.
+Fiscal Street - Text (255)
+Fiscal Postal Code - Text (20)
+Fiscal City - Text (50)
+Fiscal State - Text (50)
+Fiscal Country - Global Picklist
+Account Group - Picklist (Sold To, Client Simple, National, International, Corporate) TBC API VALUES
+Direct/Indirect - Picklist (Direct, Indirect)
+Sales District - Picklist TBC
+Language - Global Picklist
+Customer Offer/Order - Formula Text - Defines the customer type based on the information provided in the record. The default value is Customer Offer, unless all the information is completed, in which case it will be considered Customer Order.
+Incoterms - TBC
+Confirm Payer - TBC
+Distribution Channel Text - This technical field is used to specify the distribution channel required by SAP within the customer's sales area. Currently, it is populated with a single default value and is mandatory for the correct creation and management of the customer in SAP. It is not used for functional logic in Salesforce.
+Division Text - This technical field is used to specify the division required by SAP within the customer's sales area. It is currently populated with a single default value and is mandatory for standard SAP processes. It has no functional impact on Salesforce at this stage.
+Other standard fields needed for proper customer modeling:
+Account Name
+Type - Always Customer value by default
+Website
+Ticker Symbol
+Source System Id
+SIC Description
+SIC Code
+Rating
+Privacy Hold
+Phone
+Parent Account
+Ownership
+Last Modified By
+Industry
+Fax
+Employees
+Data.com Key
+Description
+Einstein Account Tier
+Account Number
+Account Site
+Account Source
+Annual Revenue
+Customer Offer/Order Qualification:
+To enable a Customer for transactional operations (Ordering), the following fields must be fully populated:
+
+Industry
+Payment Terms
+Payment Method
+Incoterms
+Confirm Payer
+This logic will be implemented in the "Customer Offer/Order" formula field to easily indicate the value in the record.
+
+Distributor
+New custom fields needed for proper distributor modeling:
+Sales Org - Global Picklist
+Sales Org Code - Formula: Sales Organization API VALUE
+Account Nickname - Text
+Status - Picklist (Active, Block, Rejected) Once validated, Active. If it is blocked, Block, and if it is rejected, Rejected.
+VIP - Checkbox
+Blocked - Checkbox
+Blocked Reason - Text
+Flag for open complaints - Checkbox
+12M Revenue - Double (16,2)
+12M Gross Profit - Double (16,2)
+Email - Email
+Email 2 - Email
+Phone 2 - Text
+Extension 1 - Text
+Extension 1 Description - Text
+Extension 2 - Text
+Extension 2 Description - Text
+External ID - Text, External ID, Unique
+Inactive Date - Date
+Inactive Reason - Text
+NIF/Fiscal ID - Text
+VAT special - Checkbox
+Payment Method - Picklist TBC
+Payment Terms - Picklist TBC
+DSO TBC
+Account Currency - Global Picklist
+ESG - checkbox
+Company Representative Phone - Text
+Distribution Territory - Text TBC
+Fiscal Street - Text (255)
+Fiscal Postal Code - Text (20)
+Fiscal City - Text (50)
+Fiscal State - Text (50)
+Fiscal Country - Global Picklist
+Account Group - Picklist (Dealer Simple)
+Direct/Indirect - Picklist (Direct, Indirect)
+Sales District - Picklist TBC
+Language - Global Picklist
+Other standard fields needed for disttributor customer modeling:
+Type - Always Distributor value by default
+Account Site
+Phone
+Fax
+Employees
+Prospect
+New custom fields needed for proper distributor modeling:
+Status - Picklist (Prospect, Pending) - It is created as a Prospect, and once sent to SAP it goes to Status Pending.
+External ID - Text, External ID, Unique
+Fiscal Street - Text (255)
+Fiscal Postal Code - Text (20)
+Fiscal City - Text (50)
+Fiscal State - Text (50)
+Fiscal Country - Global Picklist
+Email - Email
+Account Currency - Global Picklist
+Sales Org - Global Picklist
+Sales Org Code - Formula: Sales Organization API VALUE
+Account Group - Picklist (Sold To, Client Simple, National, International, Corporate, Dealer Simple) - If it comes from a Distributor Prospect, the value will be Dealer Simple, and if it comes from a Customer Prospect, the value will be Sold To
+Sales District - Picklist TBC
+Language - Global Picklist
+NIF/Fiscal ID - Text
+Other standard fields needed for disttributor customer modeling:
+Account Name
+Type - Always Prospect value by default
+Phone
+Sending to SAP for validation.
+It is not possible to send a prospect to SAP for validation if all the indicated fields have not been correctly filled out.
+
+Status
+Customer Type
+Fiscal Street
+Fiscal Postal Code
+Fiscal City
+Fiscal State
+Fiscal Country
+Email
+Account Currency
+Sales organization
+Sales organization Code
+Account Group
+Sales Distric
+Language
+NIF/Fiscal ID
+Address: Shipping address, Billing address
+A customer can have more than one billing and/or shipping address. We need to store all these customer-related addresses in a new custom object called Address. The record type indicates whether it's a billing address or a shipping address.
+
+The remaining information required will be similar to the standard Salesforce address fields:
+
+City – Text
+Country – Text
+Postal Code – Text
+State/Province – Text
+Street – Text
+Type - Picklist: Shipping address, Billing address
+Account - Master-Detail relationship to Account
+Is Primary - Checkbox
+External Id - Text, Unique, ExternalId
+While the system supports a one-to-many (1:N) relationship—allowing an unlimited number of Shipping and Billing addresses per Account—strict data integrity rules will be enforced regarding primary designations.
+
+For each Account, the following constraints apply:
+
+Unique Primary Shipping: Only one Address record of type "Shipping" may be designated as Primary.
+Unique Primary Billing: Only one Address record of type "Billing" may be designated as Primary.
+Opportunity: Renewal and Competitor
+Opportunities will be stored in the standard Opportunity object and linked to the customer through the standard AccountId field. These opportunities will be displayed on the Account record page through the related list of opportunities. Opportunities may be linked to a distributor Account record via a new custom lookup field Distributor.
+
+More Details: Opportunity Management
+
+Asset: Werfen and Competitor
+There will be two Record Types within the Asset object: Werfen and Competitor, allowing differentiation between Werfen instruments (synchronized into Salesforce through SAP integration) and competitor instruments (whose information may not be available, and therefore will be created manually by users).
+
+The Asset records will be linked to the corresponding customer through the standard AccountId field. Other important fields include:
+
+Company: Picklist: Werfen (for Werfen RT) / Competitor (for Competitor RT)
+Company Name: The name of the corresponding competitor (only applies if the company value is Competitor) - Text
+Business Unit - global Picklist
+Business Line - global Picklist
+Unit Revenues - Double (16,2)
+Units - Double (18,0)
+Total Revenues - formula = Unit Revenues * Units
+Model - Text
+SerialNumber - Text
+Material - Text
+Type - Picklist: Test, Instrument
+Distributor: Instrument distributor (if applicable) - Account Lookup
+Address: Instrument address - Address Lookup
+Product: Standard Product Lookup
+Instrument Status: Picklist: Sold, Rental, Demo
+Instrument Request: Picklist: New/Incremental, Competitive, Renewal.
+External Id - Text, Unique, ExternalId
+Data Integrity Constraints for Competitor Assets
+To ensure historical data accuracy and prevent reporting discrepancies, specific restrictions will be enforced on Asset records of the Competitor Record Type.
+Once a Competitor Asset has been instantiated, the following fields shall remain immutable:
+
+Account
+Business Unit
+This constraint will be managed via an Apex Trigger (Before Update). The logic will compare the new and old versions of the record; if a user attempts to modify either the Account or the Business Unit, the system will block the transaction and return a custom error message.**
+
+Should a Competitor Asset be created with incorrect data, the standard correction process is as follows:
+
+A System Administrator must manually delete the incorrect Asset record.
+A new Asset record must be generated with the correct Account and Business Unit information.
+Account Landscape: Customer VoB
+The Account Landscape (VoB) for Werfen and its competitors will be stored in a new custom object named Account Landscape. This approach enables us to receive Werfen-related information from SAP via integration, while allowing manual editing of the competitor-related values.
+
+These records will be linked to the customer through a new custom field, Account__c.
+
+Since it is necessary to define the competitor VoB values by business line, product, or test, users will be able to register this information in the Asset object. A Trigger Flow will then perform the required calculations to update the competitor VoB table values.
+
+The calculation will be performed each time an Asset with the Competitor Record Type is created or modified, based on the business unit of the record.
+
+==image_0==.png
+
+Some key fields of the new object include:
+
+Customer – Account Lookup
+Business Unit: we should have one record in the object for each business unit applicable to the customer - Global Picklist
+Business Line: only apply for the "Other" Business Unit - Global Dependent multi-Picklist
+Werfen Instruments: read‑only – Double (18,0)
+Werfen Revenues: read‑only - Double (16,2)
+Competitor Instruments: editable and recalculated through the Asset Trigger Flow - Double (18,0)
+Competitor Revenues: editable and recalculated through the Asset Trigger Flow - Double (16,2)
+Segmentation: picklist PEGS Segmentation
+Manually Segmentation: Checkbox - This field prevents the segmentation value from being automatically calculated and ensures that the value manually assigned to the record prevails.
+Total Revenues - formula = Competitor Revenues + Werfen Revenues - Double(16,2)
+Total Instruments - formula = Competitor Instruments + Werfen Instruments) - Double(18,0)
+Market Share - formula = (Werfen Revenues * 100)/Total Revenues - Percentage
+Pending Mapping: Checkbox - TRUE by default
+Manual Override: Checkbox - FALSE by default
+External Id – Text. Unique. ExternalId
+For more details: Sales Strategy - Segmentation Tab 
+
+Field Automation: Manual Override
+To distinguish between system-generated data and user-defined adjustments, a Manual Override checkbox will be implemented on the Account Landscape object.
+
+Manual Detection: This indicator will be automatically toggled to TRUE if a user manually modifies the Competitor Revenues field.
+Audit Purpose: This flag informs the system and other stakeholders that the displayed revenue figures may deviate from the automated average calculation derived from the related Competitor Assets
+Field Automation: Pending Mapping
+The Pending Mapping (Boolean) field on the Account Landscape object serves as an indicator of whether a competitor's footprint has been identified for a specific Account and Business Unit (BU).
+
+Initialization Logic: By default, this field is set to TRUE upon record creation.
+Before-Insert Trigger: Prior to commitment, the system will verify the existence of any Asset record where:
+RecordType = "Competitor"
+AccountId = [Account Landscape Account]
+Business Unit = [Account Landscape Business Unit]
+Outcome: If at least one matching Asset is found, the Pending Mapping field shall be set to FALSE.
+To ensure financial accuracy, the system will dynamically calculate and update the Competitor Revenues field on the Account Landscape record whenever a Competitor Asset is managed.
+
+Triggering Event: Insertion of an Asset (RecordType = "Competitor").
+
+Automation Logic:
+
+Aggregation: The system will query all Asset records with the "Competitor" RecordType associated with the same Account and Business Unit.
+Calculation: It will calculate the average revenue/value from these assets.
+Update:
+The resulting average is mapped to the Competitor Revenues field in the corresponding Account Landscape record.
+Simultaneously, the Pending Mapping flag is toggled to FALSE, as the presence of competitor instruments is now confirmed and quantified.
+Account Segmentation: Customer’s Segmentation
+To define the different segmentation types and their associated values, a new custom object Account Segmentation Reference will be used. Access to create categories within the segmentation administration will be granted only to specific users.
+
+Key fields include:
+
+Type - Picklist: Global, Local - Required field
+Business Unit - Global Picklist - Required field
+Segmentation - Text (f.e) "Cardiovascular Surgery" - Required field
+Business Segmentation Comments - Text Area
+Logic will be implemented to ensure that each segmentation remains unique in its type, and associated business unit.
+
+To register a customer’s segmentation, a new custom object Account Segmentation with the Record Type Customer’s Segmentation will be required. This object will allow a customer to be linked to a specific Segmentation.
+
+Key fields include:
+
+Account Segmentation Reference - Account Segmentation Reference Lookup - Required field
+Account - master‑detail relationship to Account
+Type - Picklist: Autopopulate Reference Type
+Business Unit - Picklist: Autopopulate Reference Business Unit
+Segment - Formula: Reference Segmentation + (Reference Type) (f.e) "Cardiovascular Surgery (Global)"
+Value - Checkbox: false default
+Business Segmentation Comments - Text Area
+External Id - Text. Unique. ExternalId Account Segmentation Reference + Id - to prevent duplicates.
+The business line field has been removed when the values ​​of the business unit "Other" were modified as new business units, so it no longer makes sense to report this field.
+
+Duplicate controls will be established to prohibit the creation of identical ReferenceIds under a single Account record.
+
+image.png
+
+A custom screen-flow Account Segmentation Management on the Account page is designed to streamline the segmentation process. The system will automatically suggest segments based on the Account's Business Units (from the 'Account Business Unit' table).
+
+Users can then review these suggestions alongside existing records, using a checkbox selection model to finalize the active segments for that specific Account. Upon flow completion, the system will create records for all newly selected items and delete any existing records that have been deselected by the user
+
+image.png
+
+image.png
+
+For more details: Sales Strategy - Segmentations Tab 
+
+Lead: Customer Prospect and Distributor Prospect
+Users must be able to create a customer prospect or distributor prospect (one that does not yet exist in the master data) in order to capture opportunities. From a new Lead record with the Customer Prospect or Distributor Prospect Record Type, an Account with the same Prospect Record Type can be generated, allowing opportunities to be associated with it.
+
+Once an opportunity has been captured under a prospect, the system will prevent progress to the quotation stage until it is linked to a validated customer or validated distributor. SAP will be the system responsible for validating customers or distributors by updating the Account Record Type from Prospect to Customer or Distributor.
+
+Therefore, an integration between Salesforce and SAP will be required so that Salesforce can send the Prospect records that need to be validated to the SAP system.
