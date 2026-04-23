@@ -1,0 +1,260 @@
+Sharing and Visibility
+The purpose of this section is to outline the record-level visibility and sharing controls applied across the various object tables defined within the Salesforce data model.
+
+Account
+The Organization-Wide Default (OWD) sharing setting for the Account object will be configured as Private. Account visibility will be driven by the territory configuration. Consequently, an Account assigned to a specific territory will be visible to users residing at that territory node, as well as those in all superior levels. For additional territory visibility, we would use Account Team Member if necessary.
+
+More detail on: Territory Management
+
+Account Team Member
+The Account Team Member object will be utilized strictly as an internal backend mechanism to drive the sharing model. It will not be exposed to standard users; visibility and management of these configuration records will be restricted entirely to System Administrators
+
+Standard & Custom Account Child Objects (General Rule)
+For objects structurally dependent on the Account, such as Address, Account Business Unit, Sales Team, Account Relationship, Data Change Request, Data Change Request Field, Account Landscape, Account Segmentation, Account Plan, Asset, Sharepoint File, and Visit, records will be structured using a Master-Detail relationship to the Account object. Consequently, the sharing model for these is strictly Controlled by Parent; any user granted read access to an Account will implicitly inherit visibility to its associated records.
+
+Address
+Address records will be structured using a Master-Detail relationship to the Account object. Consequently, the sharing model for addresses is strictly Controlled by Parent; any user granted read access to an Account will implicitly inherit visibility to its associated Address records.
+
+Account Business Unit
+The Account Business Unit will be configured with a Master-Detail relationship to the Account object. Consequently, its sharing model is strictly Controlled by Parent, ensuring that any user with visibility to a specific Account automatically inherits access to all of its related Account Business Unit records.
+
+Sales Team
+The Account Business Unit will be configured with a Master-Detail relationship to the Account object. Consequently, its sharing model is strictly Controlled by Parent, ensuring that any user with visibility to a specific Account automatically inherits access to all of its related Account Business Unit records.
+
+Account Relationship
+The Account Relationship will be configured with a Master-Detail relationship to the Account object. Consequently, its sharing model is strictly Controlled by Parent, ensuring that any user with visibility to a specific Account automatically inherits access to all of its related Account Relationship records.
+
+Data Change Request
+The Data Change Request will be configured with a Master-Detail relationship to the Account object. Consequently, its sharing model is strictly Controlled by Parent, ensuring that any user with visibility to a specific Account automatically inherits access to all of its related Data Change Request records. However, it is an object of integration with information from the account itself, so its visibility is not important.
+
+Data Change Request Field
+The Data Change Request Field will be configured with a Master-Detail relationship to the Account object. Consequently, its sharing model is strictly Controlled by Parent, ensuring that any user with visibility to a specific Account automatically inherits access to all of its related Data Change Request Field records. However, it is an object of integration with information from the account itself, so its visibility is not important.
+
+Account Landscape
+The Account Landscape will be configured with a Master-Detail relationship to the Account object. Consequently, its sharing model is strictly Controlled by Parent, ensuring that any user with visibility to a specific Account automatically inherits access to all of its related Account Landscape records.
+
+Account Segmentation
+The Account Segmentation will be configured with a Master-Detail relationship to the Account object. Consequently, its sharing model is strictly Controlled by Parent, ensuring that any user with visibility to a specific Account automatically inherits access to all of its related Account Segmentation records.
+
+Account Plan
+The Account Plan will be configured with a Master-Detail relationship to the Account object. Consequently, its sharing model is strictly Controlled by Parent, ensuring that any user with visibility to a specific Account automatically inherits access to all of its related Account Plan records.
+
+Asset
+The Organization-Wide Default (OWD) for Assets will be explicitly configured as Controlled by Parent. Any user granted access to a specific Account will implicitly inherit identical visibility to its associated Asset records.
+
+Sharepoint File
+The Sharepoint File will be configured with a Master-Detail relationship to the Account object. Consequently, its sharing model is strictly Controlled by Parent, ensuring that any user with visibility to a specific Account automatically inherits access to all of its related Sharepoint File records.
+
+Visit
+The Visit will be configured with a Master-Detail relationship to the Account object. Consequently, its sharing model is strictly Controlled by Parent, ensuring that any user with visibility to a specific Account automatically inherits access to all of its related Visit records.
+
+Visit Attendee
+The Visit Attendee will be configured with a Master-Detail relationship to the Visit object. Consequently, its sharing model is strictly Controlled by Parent, ensuring that any user with visibility to a specific Visit automatically inherits access to all of its related Visit Attendee records.
+
+Account Contact Relation
+The visibility of the Account Contact Relation (ACR) object is inherently governed by its two parent records. As a standard junction object, its sharing model is strictly Controlled by Parent on both sides. Consequently, a user must possess at least Read access to both the associated Account and Contact to view the relationship record.
+
+Contact
+To accommodate the multi-account data model and streamline the system architecture, Contact visibility will be governed natively by Enterprise Territory Management (ETM). The Organization-Wide Default (OWD) for the Contact object will be set to Private.
+Instead of relying on custom programmatic sharing or automated flows, the platform's standard ETM Contact Access level will be configured to: "View and edit all contacts associated with accounts in the territory, regardless of who owns the contacts."
+This standard configuration ensures that any user assigned to a territory automatically inherits Read and Edit access to all Contacts related to the Accounts within that territory node. This architectural approach provides several key benefits:
+
+Native Synchronization: It seamlessly supports multi-account structures and Account Contact Relations (ACR) without requiring custom ContactShare automations.
+Scalability & Performance: It leverages Salesforce's out-of-the-box sharing recalculation engine, avoiding flow execution overhead and potential system limits.
+Simplified Maintenance: Eliminates technical debt associated with custom sharing logic for the Contact object.
+(Note: If specific fields on the Contact need to be protected from editing by users outside of a specific Business Unit, this will be handled via targeted Validation Rules rather than restricting the baseline ETM edit access).
+
+Contact Segmentation
+The Contact Segmentation will be configured with a Master-Detail relationship to the Contact object. Consequently, its sharing model is strictly Controlled by Parent, ensuring that any user with visibility to a specific Contact automatically inherits access to all of its related Contact Segmentation records.
+
+Lead
+The Organization-Wide Default (OWD) for the Lead object will be configured as Public Read/Write (or Public Read Only). An open visibility model is optimal for the initial prospecting phase to prevent duplicate records. Post-conversion, the resulting Account and Opportunity fall under the strict Enterprise Territory Management (ETM) security model.
+
+Individual & Reference Catalogs
+The Individual, Account Segmentation Reference, Master Preference, Preferences, Consent Traceability, Contact Point Data, and Data Use Purpose objects will be configured as Public Read Only. This guarantees global transparency for compliance, reference, and reporting across all territories.
+
+Individual
+The Individual object serves as the centralized repository for data privacy and marketing consent. Because it is linked to both Leads and Contacts via a standard Lookup relationship, it cannot natively inherit their sharing settings.
+
+To ensure strict regulatory compliance across the platform, the Organization-Wide Default (OWD) for the Individual object will be configured as Public Read Only. This architectural decision guarantees that any user interacting with a newly created Lead or a territory-restricted Contact can seamlessly access the associated consent profile, preventing unauthorized communications without requiring complex, independent sharing rules.
+
+Account Segmentation Reference
+The Organization-Wide Default (OWD) for the Account Segmentation Reference object will be set to Public Read Only, ensuring that these master catalog values are visible to all users across the system.
+
+However, to maintain data integrity during assignment, a Validation Rule will be enforced when associating these references to a specific Account. This control mechanism will dynamically restrict the selectable segmentation values, ensuring users can only associate reference records that belong to a Business Unit already related to that target Account.
+
+Product
+The Organization-Wide Default (OWD) for the Product object will be set to Public Read Only. This ensures that the entire product catalog is visible across the organization for reference and reporting purposes.
+
+To manage the Business Unit segregation, the system will enforce Lookup Filters on the Opportunity Product and Order Request Item objects. These filters will dynamically restrict product selection, ensuring that users can only associate products that match the Business Unit of the parent Opportunity or Order Request.
+
+Price Book & Price Book Entry
+The sharing model for Price Books will be set to View Only by default.
+
+While the Product catalog remains Public Read Only, the ability to apply pricing is strictly controlled via Price Book Entries.
+
+To manage the Business Unit segregation, the system will enforce Lookup Filters on the Opportunity Product and Order Request Item objects. These filters will dynamically restrict product selection, ensuring that users can only associate products that match the Business Unit of the parent Opportunity or Order Request.
+
+Master Preference
+The Organization-Wide Default (OWD) for the Master Preference object will be set to Public Read Only, ensuring that these master catalog values are visible to all users across the system.
+
+Preferences
+The custom Preferences object will be configured with a Public Read Only Organization-Wide Default (OWD) sharing setting. Although this object is structurally related to the Lead or Contact via a Lookup relationship, its baseline visibility is deliberately kept open.
+
+In practice, users will access these records contextually by navigating through the parent Lead or Contact. By maintaining a Public Read Only model, the architecture ensures that any user who successfully accesses the parent record can seamlessly view the associated communication and business preferences, while simultaneously guaranteeing global transparency for compliance reporting across all territories.
+
+Contact Point Data
+The custom Contact Point Data object will be configured with a Public Read Only Organization-Wide Default (OWD) sharing setting. Although this object is structurally related to the Lead or Contact via a Lookup relationship, its baseline visibility is deliberately kept open.
+
+In practice, users will access these records contextually by navigating through the parent Lead or Contact. By maintaining a Public Read Only model, the architecture ensures that any user who successfully accesses the parent record can seamlessly view the associated contact point data records, while simultaneously guaranteeing global transparency for compliance reporting across all territories and preventing duplicate entries.
+
+Consent Traceability
+Since Contact Point Data are public, it makes sense that change control, traceability, and consent history should also be public.
+
+Data Use Purpose
+The sharing model for Data Use Purpose will be set to Public Read Only by default. This ensures that all records are visible across the organization for proper consent and record management in Contact Point Data.
+
+Opportunity
+The Organization-Wide Default (OWD) sharing setting for the Opportunity object will be configured as Private.
+
+Read Access: Visibility will be inherited seamlessly from the Account. The Enterprise Territory Management (ETM) configuration will be set to grant users View access to all Opportunities associated with the Accounts in their territory.
+
+Edit Access: To manage the Business Unit matrix, a Validation Rule will be implemented. While users can view all Opportunities for an Account, the validation rule will block any save/edit actions unless the user's designated Business Unit matches the Opportunity's Business Unit.
+
+Opportunity Product, Opportunity Group, Opportunity Activity Relationship: Strictly Controlled by Parent.
+
+Opportunity Team Member and Opportunity Contact Role: Inherently dictated by the parent Opportunity.
+
+Opportunity Product
+The Opportunity Product (OpportunityLineItem) object is natively structured as a strict Master-Detail child of the Opportunity. Consequently, its Organization-Wide Default (OWD) sharing setting is irrevocably Controlled by Parent.
+
+This architecture ensures that any user who access to an Opportunity will implicitly inherit full visibility into all associated product lines, requiring no independent sharing configuration.
+
+Opportunity Group
+The Opportunity Group will be configured with a Master-Detail relationship to the Opportunity object. Consequently, its sharing model is strictly Controlled by Parent, ensuring that any user with visibility to a specific Opportunity automatically inherits access to all of its related Opportunity Group records.
+
+Opportunity Activity Relationship
+The Opportunity Activity Relationship will be configured with a Master-Detail relationship to the Opportunity object. Consequently, its sharing model is strictly Controlled by Parent, ensuring that any user with visibility to a specific Opportunity automatically inherits access to all of its related Opportunity Activity Relationship records.
+
+Opportunity Visit Relationship
+The Opportunity Visit Relationship will be configured with a Master-Detail relationship to the Opportunity object. Consequently, its sharing model is strictly Controlled by Parent, ensuring that any user with visibility to a specific Opportunity automatically inherits access to all of its related Opportunity Visit Relationship records.
+
+Opportunity Team Member and Opportunity Contact Role
+The Opportunity Team Member and Opportunity Contact Role are standard related objects whose visibility is inherently dictated by the parent Opportunity. Neither object possesses an independent Organization-Wide Default (OWD) setting; their sharing models are strictly Controlled by Parent.
+
+Consequently, any user who successfully access to an Opportunity will implicitly inherit access to both its Team Members and Contact Roles.
+
+Business Activity
+The custom Business Activity object will be configured with a Master-Detail relationship to the Account object (or Controlled by Parent standard equivalent).
+
+Read Access: Any user with visibility to a specific Account automatically inherits read access to all of its related Business Activities.
+Edit Access: Similar to Opportunities, a Validation Rule will enforce that only users belonging to the specific Business Unit designated on the Business Activity can edit the record.
+Activity Visit: Strictly Controlled by Parent to the Business Activity.
+Activity Visit
+The Activity Visit will be configured with a Master-Detail relationship to the Business Activity object. Consequently, its sharing model is strictly Controlled by Parent, ensuring that any user with visibility to a specific Business Activity automatically inherits access to all of its related Activity Visit records.
+
+Quote
+The standard Quote and Quote Line Item objects are natively architected to inherit the sharing and visibility context of the parent Opportunity. Consequently, their sharing setting is strictly Controlled by Parent.
+
+Quote Line Item
+The Quote Line Item object is natively structured as a strict Master-Detail child of the Quote. Consequently, its Organization-Wide Default (OWD) sharing setting is irrevocably Controlled by Parent.
+
+Order Request
+The custom Order Request object will be configured with a Master-Detail relationship to the Account object (or Controlled by Parent standard equivalent).
+
+Read Access: The custom Order Request object will derive their read visibility from the parent Account (either via Master-Detail). Any user viewing the Account will be able to see its related Requests.
+Edit Access: To segregate commercial operations, a Validation Rule will be strictly enforced. Users will only be able to create or edit Order Requests if their user profile/permissions align with the Business Unit assigned to the record.
+Order Request Item: Strictly Controlled by Parent.
+Order Request Item
+The Order Request Item will be configured with a Master-Detail relationship to the Order Request object. Consequently, its sharing model is strictly Controlled by Parent, ensuring that any user with visibility to a specific Order Request automatically inherits access to all of its related Order Request Item records.
+
+Order Request Notification
+The Order Request Notification will be configured with a Master-Detail relationship to the Order Request object. Consequently, its sharing model is strictly Controlled by Parent, ensuring that any user with visibility to a specific Order Request automatically inherits access to all of its related Order Request Notification records.
+
+Order
+The standard Order object will be configured with a Standard Account-Controlled sharing to the Account object.
+
+Read Access: The Order object will derive their read visibility from the parent Account. Any user viewing the Account will be able to see its related Orders.
+Edit Access: The Orders master data is SAP, so it cannot be edited from Salesforce.
+Order Item: Strictly Controlled by Parent.
+Order Item
+The Order Item object is natively structured as a strict Master-Detail child of the Order. Consequently, its Organization-Wide Default (OWD) sharing setting is irrevocably Controlled by Parent.
+
+This architecture ensures that any user who successfully access to an Order will implicitly inherit full visibility into all associated Order items, requiring no independent sharing configuration.
+
+Event
+The Event object serves as the core record for managing events. It is a standalone custom object and does not inherit visibility from the Account territory model.
+
+Organization-Wide Default (OWD): The sharing setting will be configured as Private.
+Visibility Mechanism: Access is driven by Criteria-Based Sharing Rules leveraging the Sales Org field.
+Access Logic: * Records are shared with Public Groups corresponding to each Sales Organization, ensuring users only see events relevant to their specific region.
+Event Children (Controlled by Parent)
+For objects structurally dependent on the Event, records will be configured using a Master-Detail relationship. Consequently, their sharing model is strictly Controlled by Parent; any user with access to an Event record will implicitly inherit visibility to its associated child records. This includes:
+
+Task Participant
+The custom Task Participant object will be configured with a Master-Detail relationship to the Event object (or Controlled by Parent standard equivalent).
+
+Event Attendee
+The custom Event Attendee object will be configured with a Master-Detail relationship to the Event object (or Controlled by Parent standard equivalent).
+
+Event Expenses
+The custom Event Expenses object will be configured with a Master-Detail relationship to the Event object (or Controlled by Parent standard equivalent).
+
+Event Organization
+The Event Organization object acts as a regional configuration table, defining attendance capacities and budget allocations per territory/region.
+
+Organization-Wide Default (OWD): Private.
+
+Visibility Mechanism: Similar to the Event object, visibility is governed by Criteria-Based Sharing Rules based on the Sales Organization.
+
+Rationale: This ensures that sensitive budget configurations and regional constraints are only visible to the users operating within that specific Sales Org.
+
+Fair Market Value
+The FMV object is a compliance reference matrix that dictates spending limits and caps for attendees based on their professional tier or classification.
+
+Organization-Wide Default (OWD): Private (or Public Read Only if global transparency is required, though restricted to Sales Org is recommended for regional compliance).
+
+Visibility Mechanism: Access is granted via Criteria-Based Sharing Rules based on the Sales Organization.
+
+Rationale: Since compliance regulations and spending limits vary significantly by country and Sales Organization, this model ensures users only apply the financial rules applicable to their specific jurisdiction.
+
+Notifications
+Master Notification
+The Organization-Wide Default (OWD) for the Master Notification object will be set to Public Read Only, ensuring that these master catalog values are visible to all users across the system.
+
+Notification Subscriber
+The custom Notification Subscriber object will be configured with a Master-Detail relationship to the Master Notification object (or Controlled by Parent standard equivalent).
+
+Notification Log
+The custom Notification Log object will be configured with a Master-Detail relationship to the Master Notification object (or Controlled by Parent standard equivalent).
+
+User Interface & Workspace Management (List Views)
+To ensure that the open read-visibility model does not overwhelm users with irrelevant records from other Business Units, the User Interface will be heavily optimized using targeted List Views.
+
+Business Unit Specific List Views: For objects like Opportunities, Business Activities, Order Requests, and Orders, specific List Views will be created, pre-filtered by Business Unit.
+Targeted Sharing: These List Views will be shared exclusively with the corresponding Business Unit Public Groups.
+Result: While a user can navigate to an Account and view a holistic picture of all records (Read Access), their day-to-day workspace (Tabs and List Views) will remain clean, prioritized, and strictly tailored to their specific Business Unit responsibilities.
+Enterprise Territory Management (ETM) & Business Unit Security Configuration
+This section outlines the specific configuration of the active Territory Model to align with the simplified, matrix-based security architecture.
+
+To balance global visibility with strict Business Unit (BU) editing control, the solution leverages a combination of standard ETM sharing to grant baseline access, paired with Custom Validation Rules and Dynamic Forms to enforce business logic.
+
+OWD Setup Foundation:
+Account: Private
+Contact: Private
+Opportunity: Private
+Case: Private
+ETM Default Access Levels:
+The standard Territory Model configuration must be set as follows to ensure users can access records to trigger the necessary BU validation checks.
+
+Object Access	Standard ETM Configuration Setting	Rationale
+Account Access	View and edit accounts assigned to the territory.	Standard native behavior allowing territory members to manage the assigned customer record.
+Contact Access	View and edit all contacts associated with accounts in the territory.	Native Simplification: Leverages built-in ETM functionality to grant blanket read/edit access to contacts, removing the need for custom ContactShare flows.
+Opportunity & Case Access	View and edit all opportunities/cases associated with accounts in the territory.	Crucial for UI/UX & Validation: ETM must grant standard Read/Write access so users can enter the edit context. Actual saving of the record will be strictly governed by Validation Rules (verifying User BU vs. Record BU), while Lightning Record Pages (Dynamic Forms) will dynamically hide edit actions for non-matching BUs to prevent user frustration.
+Hierarchy Access Settings	Opportunity Access for Parent Territories: Must be set to View and edit all opportunities..	Similar to default access, this opens the record up for the validation rules to do their job based on the user's assigned Business Unit.
+Enforcement Mechanisms
+While ETM opens the record for viewing and potential editing, the following mechanisms secure the matrix:
+
+Validation Rules: Enforced at the database level. A rule on the Opportunity, Case, and Order objects will block the ISNEW() or ISCHANGED() actions if the executing User's assigned Business Unit does not match the record's specified Business Unit.
+
+Lightning Record Pages: To optimize the User Experience, Dynamic Forms and conditionally visible actions will be implemented using Custom Permissions. If a user lacks the Custom Permission for a specific BU, the 'Edit' buttons and editable fields will be hidden from the UI, aligning visual permissions with backend validation.
